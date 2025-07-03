@@ -17,25 +17,26 @@ using StringTools;
 class SysFileSystem implements IFileSystem
 {
 	public final modRoot:String;
+	public final linuxInsensitivePaths:Bool;
 
 	public function new(params:PolymodFileSystemParams)
 	{
 		this.modRoot = params.modRoot;
+		this.linuxInsensitivePaths = params.linuxInsensitivePaths;
 	}
 
 	public function exists(path:String)
 	{
 		#if linux
-		return getPathLike(path) != null;
-		#else
-		return sys.FileSystem.exists(path);
-		#end
+		if(linuxInsensitivePaths) return getPathLike(path) != null;
+		else #end return sys.FileSystem.exists(path);
 	}
 
 	public function isDirectory(path:String)
 	{
 		#if linux
-		path = getPathLike(path);
+		if(linuxInsensitivePaths)
+			path = getPathLike(path);
 		#end
 		return sys.FileSystem.isDirectory(path);
 	}
@@ -45,7 +46,8 @@ class SysFileSystem implements IFileSystem
 		try
 		{
 			#if linux
-			path = getPathLike(path);
+			if(linuxInsensitivePaths)
+				path = getPathLike(path);
 			#end
 			return sys.FileSystem.readDirectory(path);
 		}
@@ -59,7 +61,8 @@ class SysFileSystem implements IFileSystem
 	public function getFileContent(path:String)
 	{
 		#if linux
-		path = getPathLike(path);
+		if(linuxInsensitivePaths)
+			path = getPathLike(path);
 		#end
 		return getFileBytes(path).toString();
 	}
@@ -67,12 +70,12 @@ class SysFileSystem implements IFileSystem
 	public function getFileBytes(path:String)
 	{
 		#if linux
-		path = getPathLike(path);
-		if(path == null) return null;
-		#else
-		if (!exists(path))
+		if(linuxInsensitivePaths){
+			path = getPathLike(path);
+			if(path == null) return null;
+		}
+		else #end if (!exists(path))
 			return null;
-		#end
 		return sys.io.File.getBytes(path);
 	}
 

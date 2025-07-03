@@ -66,6 +66,15 @@ typedef PolymodFileSystemParams =
 	 * May not be applicable for file systems which dicatate the directory, or use no directory.
 	 */
 	?modRoot:String,
+
+	/**
+	 * If `true`, allows Linux to use additional logic to guarantee parity with case insensitive paths on Windows.
+	 * If `false`, Certain paths might not work on Linux.
+	 * This logic might cause a lot of lag if used with a lot of paths with misnamed directories.
+	 * As such it's recommended to not rely on it outside of mods.
+	 * @default `false`
+	 */
+	?linuxInsensitivePaths:Bool,
 };
 
 /**
@@ -121,7 +130,7 @@ interface IFileSystem
 
 	/**
 	 * Provide a list of valid mods for this file system to load.
-	 * 
+	 *
 	 * @param apiVersionRule (optional) A version query to match against the mod's API version.
 	 * @return An array of matching mods.
 	 */

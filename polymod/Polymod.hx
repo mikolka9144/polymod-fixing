@@ -248,6 +248,8 @@ class Polymod
 			params.fileSystemParams = {modRoot: modRoot};
 		if (params.fileSystemParams.modRoot == null)
 			params.fileSystemParams.modRoot = modRoot;
+		if (params.fileSystemParams.linuxInsensitivePaths == null)
+			params.fileSystemParams.linuxInsensitivePaths = false;
 		if (params.apiVersionRule == null)
 			params.apiVersionRule = VersionUtil.DEFAULT_VERSION_RULE;
 		var fileSystem = PolymodFileSystem.makeFileSystem(params.customFilesystem, params.fileSystemParams);
